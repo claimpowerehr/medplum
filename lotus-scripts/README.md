@@ -8,11 +8,11 @@ Our code is deployed to AWS in two environments for redundancy and security
 
 `dev`
 
-dev.lotuscares.ai
+dev.claimpower.com
 
 `www`
 
-www.lotuscares.ai
+www.claimpower.com
 
 The infrascture is synchronized via terraform with configuration files found in `lotus-ts`
 
