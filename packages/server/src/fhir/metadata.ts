@@ -8,7 +8,8 @@ import {
   CapabilityStatementRestSecurity,
   ResourceType,
 } from '@medplum/fhirtypes';
-import { getConfig, MedplumServerConfig } from '../config';
+import { getConfig } from '../config/loader';
+import { MedplumServerConfig } from '../config/types';
 
 /**
  * The base CapabilityStatement that seeds the server generated statement.
@@ -50,6 +51,7 @@ const baseStmt: CapabilityStatement = {
     'http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server',
     'http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data',
   ],
+  implementationGuide: ['http://hl7.org/fhir/uv/fhircast/ImplementationGuide/hl7.fhir.uv.fhircast|3.0.0'],
   fhirVersion: '4.0.1',
   format: ['json'],
   patchFormat: [ContentType.JSON_PATCH],
@@ -210,6 +212,18 @@ function buildRest(config: MedplumServerConfig): CapabilityStatementRest[] {
       resource: buildResourceTypes(),
       interaction: [{ code: 'transaction' }, { code: 'batch' }],
       searchParam: supportedSearchParams,
+      extension: [
+        // See: https://build.fhir.org/ig/HL7/fhircast-docs/CapabilityStatement-fhircast-capabilitystatement-example.json
+        {
+          extension: [
+            {
+              url: 'hub.url',
+              valueUrl: `${config.baseUrl}fhircast/STU3`,
+            },
+          ],
+          url: 'http://hl7.org/fhir/uv/fhircast/StructureDefinition/fhircast-configuration-extension',
+        },
+      ],
     },
   ];
 }
