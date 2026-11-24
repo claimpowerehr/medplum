@@ -3,11 +3,13 @@ import { Attachment, Binary, Meta, Resource, ResourceType } from '@medplum/fhirt
 import { Job, Queue, QueueBaseOptions, Worker } from 'bullmq';
 import fetch from 'node-fetch';
 import { Readable } from 'stream';
-import { getConfig, MedplumServerConfig } from '../config';
+import { getConfig } from '../config/loader';
+import { MedplumServerConfig } from '../config/types';
 import { tryGetRequestContext, tryRunInRequestContext } from '../context';
 import { getSystemRepo } from '../fhir/repo';
 import { getBinaryStorage } from '../fhir/storage';
 import { getLogger, globalLogger } from '../logger';
+import { reconnectOnError } from '../redis';
 import { parseTraceparent } from '../traceparent';
 
 /*
@@ -42,7 +44,7 @@ let worker: Worker<DownloadJobData> | undefined = undefined;
  */
 export function initDownloadWorker(config: MedplumServerConfig): void {
   const defaultOptions: QueueBaseOptions = {
-    connection: config.redis,
+    connection: { ...config.redis, reconnectOnError },
   };
 
   queue = new Queue<DownloadJobData>(queueName, {
