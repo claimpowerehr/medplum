@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - echo "MEDPLUM_BASE_URL=https://devapi.medplum.lotuscares.ai/" >> .env
+      - echo "MEDPLUM_BASE_URL=https://devapi.medplum.claimpower.com/" >> .env
   pre_build:
     commands:
       - npm install
@@ -15,7 +15,7 @@ phases:
       - npm install --save-dev @types/jest
   build:
     commands:
-      - echo "MEDPLUM_BASE_URL=https://devapi.medplum.lotuscares.ai/" >> packages/app/.env.defaults
+      - echo "MEDPLUM_BASE_URL=https://devapi.medplum.claimpower.com/" >> packages/app/.env.defaults
       - npm run build -- --filter=@medplum/app
       - cp -r packages/app/dist ./app-dist
   post_build:
